@@ -22,7 +22,13 @@ namespace EchoServer
             listener.Start();
 
             TcpClient socket = listener.AcceptTcpClient();
+            DoClient(socket);
+        }
 
+
+
+        public void DoClient(TcpClient socket)
+        {
 
             using (StreamReader sr = new StreamReader(socket.GetStream()))
             using (StreamWriter sw = new StreamWriter(socket.GetStream()))
@@ -31,12 +37,20 @@ namespace EchoServer
                 {
                     string line = sr.ReadLine();
                     Console.WriteLine("The server has received message: " + line);
-
-                    sw.WriteLine(line);
+                    char[] characters = line.ToCharArray();
+                    int spaces = 0;
+                    foreach (var character in characters)
+                    {
+                        if (character == ' ') spaces += 1;
+                    }
+                    string returnMessage = $"Received message. The message contained {spaces+1} words";
+                    sw.WriteLine(returnMessage);
                     sw.Flush();
                 }
             }
-
         }
+
+
+        
     }
 }
